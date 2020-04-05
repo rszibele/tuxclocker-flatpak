@@ -1,0 +1,57 @@
+app-id: com.github.lurkki14.tuxclocker
+runtime: org.kde.Platform
+runtime-version: "5.14"
+sdk: org.kde.Sdk
+command: tuxclocker
+finish-args:
+  - --filesystem=host # TODO: fixme
+  - --device=all # TODO: Fixme
+  - --socket=wayland
+  - --socket=x11
+build-options:
+  no-debuginfo: true
+  strip: true
+cleanup:
+  - /include
+  - /lib/pkgconfig
+  - /man
+  - /share/man
+  - /share/info
+  - "*.a"
+  - "*.la"
+
+modules:
+
+- name: jansson
+  buildsystem: simple
+  build-commands:
+  - autoreconf -i
+  - ./configure --prefix=/app/
+  - make
+  - make install
+  - make check
+  sources:
+  - type: archive
+    url: https://github.com/akheron/jansson/archive/v2.12.tar.gz
+    sha512: 3ada45cd9b2fc7c1b20d11ce508db72a9ab2565b12d1bf45a5017e43435002f3488d92db9e0278101a83052907c5d51eb844a8389717a8f31eb93d1e135159f7
+
+- name: boost
+  buildsystem: simple
+  build-commands:
+  - ./bootstrap.sh --prefix=/app/ --with-libraries=system,filesystem
+  - ./b2 install
+  sources:
+  - type: archive
+    url: https://dl.bintray.com/boostorg/release/1.72.0/source/boost_1_72_0.tar.bz2
+    sha512: 63bbd1743e7c904b2e69fdc2eafd1c2a8a30fd70d960dcd366059d0100f000cb605d56cbd9397bb18421631f1c9552a772c434d0f0caddbe56302273f51fd1f6
+
+- name: tuxclocker
+  buildsystem: simple
+  build-commands:
+  - meson build --prefix=/app/ --buildtype=release -Dplugins=false -Ddaemon=false
+  - cd build/ && ninja && ninja install
+  sources:
+  - type: git
+    url: https://github.com/Lurkki14/tuxclocker.git
+    branch: cpplib
+    commit: 9410102c89b3984cafb513292fce923db480ef86
