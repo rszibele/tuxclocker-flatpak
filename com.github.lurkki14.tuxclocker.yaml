@@ -22,19 +22,6 @@ cleanup:
 
 modules:
 
-- name: jansson
-  buildsystem: simple
-  build-commands:
-  - autoreconf -i
-  - ./configure --prefix=/app/
-  - make
-  - make install
-  - make check
-  sources:
-  - type: archive
-    url: https://github.com/akheron/jansson/archive/v2.12.tar.gz
-    sha512: 3ada45cd9b2fc7c1b20d11ce508db72a9ab2565b12d1bf45a5017e43435002f3488d92db9e0278101a83052907c5d51eb844a8389717a8f31eb93d1e135159f7
-
 - name: boost
   buildsystem: simple
   build-commands:
